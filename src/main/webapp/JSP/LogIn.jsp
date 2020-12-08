@@ -16,6 +16,7 @@
         <h1>Ingreso al sistema</h1>
         <s:form action="login" method = "post">
         <s:textfield label="Ingresar el nombre de usuario" name="login.user"></s:textfield>
+        <s:password label="Contraseña" name="login.user"></s:password>
         <s:submit value="Ingresar"></s:submit>
         </s:form>
     </body>
