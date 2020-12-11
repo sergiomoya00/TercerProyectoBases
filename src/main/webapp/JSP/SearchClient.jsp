@@ -32,7 +32,7 @@
                         <tr>
                             <th scope="row"><s:property value="name"></s:property></th>
                             <td><s:property value="country"></s:property></td>
-                            <td><s:property value="languages"></s:property></td>
+                            <td><img src="<s:url value='/JSP/img/portfolio-1.jpg'/>" /></td>
 
 
                             </tr>

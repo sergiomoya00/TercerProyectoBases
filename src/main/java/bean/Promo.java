@@ -13,18 +13,27 @@ public class Promo {
 
     private String name;
     private String description;
-    private Item itemName;
+    private String itemName;
     private String discount;
+    private String regist;
     private String initialDate;
     private String finalDate;
 
-    public Promo(String name, String description, Item itemName, String discount, String initialDate, String finalDate) {
+    public Promo(String name, String description, String itemName, String discount, String initialDate, String finalDate) {
         this.name = name;
         this.description = description;
         this.itemName = itemName;
         this.discount = discount;
         this.initialDate = initialDate;
         this.finalDate = finalDate;
+    }
+    
+    public String getRegist() {
+        return regist;
+    }
+
+    public void setRegist(String regist) {
+        this.regist = regist;
     }
 
     public Promo() {
@@ -46,11 +55,11 @@ public class Promo {
         this.description = description;
     }
 
-    public Item getItemName() {
+    public String getItemName() {
         return itemName;
     }
 
-    public void setItemName(Item itemName) {
+    public void setItemName(String itemName) {
         this.itemName = itemName;
     }
 

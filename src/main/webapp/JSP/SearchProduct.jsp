@@ -14,16 +14,19 @@
     </head>
     <body>
         <h1>BUSCAR UN PRODUCTO ESPECÍFICO</h1>
-        <s:form action="userlist" method="post"> 
-             <s:textfield label="Nombre del producto" name="treatments.type"></s:textfield>
+        <s:form action="productlist" method="post"> 
+             <s:textfield label="Nombre del producto" name="item.name"></s:textfield>
               <s:submit value="Mostrar"></s:submit>
                 <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">Nombre del producto</th>
-                            <th scope="col">Articulo</th>
+                            <th scope="col">Marca</th>
                             <th scope="col">Precio</th>
-                            <th scope="col">Cantidad</th>
+                            <th scope="col">Edicion Limitada</th>
+                            <th scope="col">Unidades disponibles</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Deportes</th>
 
                         </tr>
                     </thead>
@@ -31,8 +34,12 @@
                     <s:iterator value="list" status="row">
                         <tr>
                             <th scope="row"><s:property value="name"></s:property></th>
-                            <td><s:property value="country"></s:property></td>
-                            <td><s:property value="languages"></s:property></td>
+                            <td><s:property value="brand"></s:property></td>
+                            <td><s:property value="price"></s:property></td>
+                            <td><s:property value="limitedEdition"></s:property></td>
+                            <td><s:property value="availableItems"></s:property></td>
+                            <td><s:property value="type"></s:property></td>
+                            <td><s:property value="depor"></s:property></td>
 
 
                             </tr>

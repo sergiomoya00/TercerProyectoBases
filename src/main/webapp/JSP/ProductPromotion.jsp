@@ -16,24 +16,28 @@
         <h2 >
             CREAR PROMOCIÓN
         </h2> 
-        <s:form action="addProduct" method="post" >
+         <s:form action="comboProducts" method="post" >
+             <s:set var="productName" value="{''}" />
+            <s:submit value="Cargar productos" id="btn-submit" align="left"/>
+        </s:form>
+        <s:form action="addPromo" method="post" >
             <br />
-            <s:textfield  size="40" maxlength="40" required="true" key="Nombre de la promoción" name="treatments.name"/>
-            <s:textfield  size="40" maxlength="40" required="true" key="Descripción" name="treatment.name"/>
-            <s:textfield  size="40" maxlength="40" required="true" key="Fecha de inicio" name="treatmen.name"/>
-            <s:textfield  size="40" maxlength="40" required="true" key="Fecha de fin" name="tretments.name"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Nombre de la promoción" name="promo.name"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Descripción" name="promo.description"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Fecha de inicio" name="promo.initialDate"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Fecha de fin" name="promo.finalDate"/>
             <br />
-            <s:set var="productName" value="{'si','no'}" />
-            <s:select label="Nombre del producto" name="yourProduct"
+           
+            <s:select label="Nombre del producto" name="promo.itemName"
                       accesskey="" headerKey="-1" 
-                      cssClass="" list="productName"/>
+                      cssClass="" list="%{productName}"/>
             <br />          
             <s:set var="type" value="{'regalia','descuento'}" />
-            <s:select label="Tipo de descuento" name="yourType"
+            <s:select label="Tipo de descuento" name="promo.discount"
                       accesskey="" headerKey="-1"
                       cssClass="" list="type"/>
             <br />  
-            <s:textfield  size="40" maxlength="40" required="true" key="Ingrese descripción o porcentaje" name="tretments.name"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Ingrese descripción o porcentaje" name="promo.regist"/>
             <s:submit value="Registrar" id="btn-submit" align="left"/>
         </s:form>
     </body>

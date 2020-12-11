@@ -17,29 +17,29 @@
         <h2 >
             AÑADIR ARTÍCULO
         </h2> 
-        <s:form action="createtreatents" namespace="/">
-            <s:textfield label="Deportes para los que se puede utilizar" name="treatments.type"></s:textfield>
+        <s:form action="addSport" namespace="/">
+            <s:textfield label="Deportes para los que se puede utilizar" name="item.sport"></s:textfield>
             <s:submit value="Insertar deporte"></s:submit>
         </s:form>
 
-        <s:form action="createtreatments" namespace="/">
+        <s:form action="addImage" namespace="/">
             <s:textfield label="Imagen del artículo" name="treatments.type"></s:textfield>
             <s:submit value="Insertar imagen"></s:submit>
         </s:form>
         <s:form action="addProduct" method="post" >
             <br />
-            <s:textfield  size="40" maxlength="40" required="true" key="Ingresar nombre del artículo" name="treatments.name"/>
-            <s:textfield  size="40" maxlength="40" required="true" key="Ingresar la marca del artículo" name="treatment.name"/>
-            <s:textfield  size="40" maxlength="40" required="true" key="Ingresar precio del artículo" name="treatmen.name"/>
-            <s:textfield  size="40" maxlength="40" required="true" key="Unidades disponibles en inventario" name="tretments.name"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Ingresar nombre del artículo" name="item.name"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Ingresar la marca del artículo" name="item.brand"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Ingresar precio del artículo" name="item.price"/>
+            <s:textfield  size="40" maxlength="40" required="true" key="Unidades disponibles en inventario" name="item.availableItems"/>
             <br />
             <s:set var="state" value="{'si','no'}" />
-            <s:select label="Edición limitada" name="yourEdition"
+            <s:select label="Edición limitada" name="item.limitedEdition"
                       accesskey="" headerKey="-1" 
                       cssClass="" list="%{state}"/>
             <br />          
             <s:set var="type" value="{'prenda','articulo'}" />
-            <s:select label="Tipo de producto" name="yourType"
+            <s:select label="Tipo de producto" name="item.type"
                       accesskey="" headerKey="-1"
                       cssClass="" list="type"/>
             <s:submit value="Registrar" id="btn-submit" align="left"/>

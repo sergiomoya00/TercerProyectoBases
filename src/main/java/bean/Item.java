@@ -10,16 +10,18 @@ package bean;
  * @author samoy
  */
 public class Item {
+
     private String name;
     private String brand;
     private int price;
-    private ItemSport sport;
-    private boolean limitedEdition;
+    private String sport;
+    private String depor;
+    private String limitedEdition;
     private int availableItems;
     private String image;
     private String type;
- 
-    public Item(String name, String brand, int price, ItemSport sport, boolean limitedEdition, int availableItems, String image, String type) {
+
+    public Item(String name, String brand, int price, String sport, String limitedEdition, int availableItems, String image, String type) {
         this.name = name;
         this.brand = brand;
         this.price = price;
@@ -31,6 +33,14 @@ public class Item {
     }
 
     public Item() {
+    }
+
+    public String getDepor() {
+        return depor;
+    }
+
+    public void setDepor(String depor) {
+        this.depor = depor;
     }
 
     public String getName() {
@@ -57,19 +67,19 @@ public class Item {
         this.price = price;
     }
 
-    public ItemSport getSport() {
+    public String getSport() {
         return sport;
     }
 
-    public void setSport(ItemSport sport) {
+    public void setSport(String sport) {
         this.sport = sport;
     }
 
-    public boolean isLimitedEdition() {
+    public String isLimitedEdition() {
         return limitedEdition;
     }
 
-    public void setLimitedEdition(boolean limitedEdition) {
+    public void setLimitedEdition(String limitedEdition) {
         this.limitedEdition = limitedEdition;
     }
 
@@ -96,6 +106,5 @@ public class Item {
     public void setType(String type) {
         this.type = type;
     }
-    
-    
+
 }
