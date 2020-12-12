@@ -31,7 +31,15 @@ public class Item {
         this.image = image;
         this.type = type;
     }
-
+//CONSTRUCTOR PARA LA BASE DE GRAFOS
+    public Item(String name, String brand, int price, String sport, String limitedEdition, String type) {
+        this.name = name;
+        this.brand = brand;
+        this.price = price;
+        this.sport = sport;
+        this.limitedEdition = limitedEdition;
+        this.type = type;
+    }
     public Item() {
     }
 
