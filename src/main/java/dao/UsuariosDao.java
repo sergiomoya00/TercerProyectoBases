@@ -3,10 +3,12 @@ package dao;
 
 import bean.Item;
 import bean.User;
+import java.util.ArrayList;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import static org.neo4j.driver.Values.parameters;
 import org.neo4j.driver.*;
+import static org.neo4j.driver.Values.parameters;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -52,7 +54,42 @@ public class UsuariosDao {
                     parameters("n", item.getName(),"l", item.getBrand(),"g", item.getPrice(),"f", item.getSport()
                     ,"u", item.getType(),"c", item.isLimitedEdition())));
         }
-    }  
+    }
+//METODO DE COMPRAR PRODUCTO, RECIBE EL NOMBRE DEL PRODUCTO Y EL NOMBRE DE USUARIO
+public void buyItem(String userName,String itemName )
+{
+        try ( Session session = driver.session() )
+        {
+            session.run( "MATCH (a:Usuario {usuario: $nombreUsuario}) " +
+                    "MATCH (p:Producto {nombre: $nombreProducto}) " +
+                    "CREATE (a)-[:COMPRA]->(p)",
+            parameters( "nombreUsuario", userName, "nombreProducto", itemName ) );
+        }   
+}    
+    
+//    HISTORIAL DE COMPRAS DEL USUARIO, RECIBE EL NOMBRE DE USUARIO
+//            Y RETORNA UNA LISTA DE PRODUCTOS
+    public ArrayList<Item> userRecord(String userName)
+    {
+        ArrayList<Item> itemList = new ArrayList<>();
+        try (Session session = driver.session())
+        {
+            Result result = session.run(
+                    "MATCH (n:Usuario {usuario: $x})-[r]-(b)\n" +
+                        "RETURN b ",
+                    parameters("x", userName));
+            while (result.hasNext())
+            {
+                Record record = result.next();
+                Item item = new Item(record.get(0).get("nombre").asString(), record.get(0).get("marca").asString(),
+                        record.get(0).get("precio").asInt(), record.get(0).get("nombre").asString(),
+                        record.get(0).get("nombre").asString(), record.get(0).get("nombre").asString());
+                itemList.add(item);
+                System.out.println(record.get(0).get("nombre"));
+            }
+        }
+        return itemList;
+    }
     public void close()
     {
         // Closing a driver immediately shuts down all open connections.
