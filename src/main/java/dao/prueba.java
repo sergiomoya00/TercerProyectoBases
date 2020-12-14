@@ -22,7 +22,10 @@ public class prueba {
               UsuariosDao dao = new UsuariosDao();
               //dao.sameProduct("mata");
 
-              q.updateProductQuantity("guantes", 2);
+              //q.updateProductQuantity("guantes", 2);
+              List<String> lol = new ArrayList<>();
+              
+              dao.
     }
 
 }

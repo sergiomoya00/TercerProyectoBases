@@ -132,6 +132,98 @@ public class QueriesDAO {
         }
     }
 
+    //CREA UN CARRITO DE COMPRAS
+    public void createCarrito(String nameU, List<String> products, int quatity) {
+        //Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Carrito");
+
+            Random rand = new Random();
+            List<Document> listd = new ArrayList<>();
+            List<Document> liste = new ArrayList<>();
+            Document student = new Document("_id", new ObjectId());
+            student.append("nombre", nameU);
+
+            for (int i = 0; i < products.size(); i++) {
+                Document[] d = new Document[100];
+                d[i] = new Document("nombre", products.get(i)).append("cantidad", quatity);
+                listd.add(d[i]);
+
+            }
+            student.append("productos", listd);
+            collection.insertOne(student);
+
+        }
+    }
+
+    //OBTIENE EL CARRITO DE COMPRAS
+    public List getCarrito(String username) {
+
+        List listTotal = new ArrayList<>();
+        String sport = "";
+
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Carrito");
+            MongoCursor<Document> cursor = null;
+            cursor = collection.find(and(Document.parse("{\"nombre\": \"" + username + "\"}"))).projection(fields(include("nombre"), include("productos"), excludeId())).iterator();
+
+            //FindIterable<Document> iterable = collection.find(Document.parse("{\"nombre\": \"" + name + "\"}"));
+            while (cursor.hasNext()) {
+
+                Document temp_person_doc = cursor.next();
+                String houseNo = temp_person_doc.getString("nombre");
+                java.util.List sports = (java.util.List) temp_person_doc.get("productos");
+
+                List<String> atributosS = new ArrayList<>();
+
+                while (sports.isEmpty() == false) {
+
+                    int i = 0;
+                    Document nombreIdioma = (Document) sports.get(i);
+                    String nomIdio = nombreIdioma.getString("nombre");
+                    atributosS.add(nomIdio);
+                    sports.remove(sports.get(i));
+                    i++;
+                }
+
+                for (int i = 0; i < atributosS.size(); i++) {
+                    sport = atributosS.get(i) + "," + sport;
+                    //item[count].setDepor(sport);
+                }
+
+                listTotal.add(houseNo);
+                listTotal.add(sport);
+                sport = "";
+            }
+
+        }
+        return listTotal;
+    }
+
+    public void deleteCarrito(String username) {
+
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Carrito");
+
+            BasicDBObject searchQuery = new BasicDBObject();
+            searchQuery.put("nombre", username);
+
+            collection.deleteOne(searchQuery);
+        }
+    }
+
     public List getAllProducts() {
 
         List listTotal = new ArrayList<>();
@@ -232,7 +324,7 @@ public class QueriesDAO {
 
             BasicDBObject query = new BasicDBObject();
             query.put("nombre", name);
-            
+
             Integer available = cursor.next().getInteger("unidadesDisponibles");
             BasicDBObject newDocument = new BasicDBObject();
             query.put("nombre", name);
