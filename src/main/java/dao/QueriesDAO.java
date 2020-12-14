@@ -164,7 +164,6 @@ public class QueriesDAO {
         List<Item> listTotal = new ArrayList<>();
         int count = 0;
         String sport = "";
-        
 
         MongoClientURI uri = new MongoClientURI(
                 "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
@@ -174,9 +173,6 @@ public class QueriesDAO {
             MongoCollection<Document> collection = database.getCollection("Articulo");
             MongoCursor<Document> cursor = null;
             cursor = collection.find(and(Document.parse("{\"nombre\": \"" + product + "\"}"))).projection(fields(include("nombre"), include("marca"), include("precio"), include("edicionLimitada"), include("unidadesDisponibles"), include("tipo"), include("deportes"), excludeId())).iterator();
-
-            
-            
 
             //FindIterable<Document> iterable = collection.find(Document.parse("{\"nombre\": \"" + name + "\"}"));
             while (cursor.hasNext()) {
@@ -209,12 +205,10 @@ public class QueriesDAO {
                     i++;
                 }
 
-
                 for (int i = 0; i < atributosS.size(); i++) {
                     sport = atributosS.get(i) + "," + sport;
                     item[count].setDepor(sport);
                 }
-
 
                 listTotal.add(item[count]);
                 count++;
@@ -223,6 +217,32 @@ public class QueriesDAO {
 
         }
         return listTotal;
+    }
+
+    //Modificar cantidad de producto
+    public void updateProductQuantity(String name, int quantity) {
+
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Articulo");
+            MongoCursor<Document> cursor = collection.find(and(Document.parse("{\"nombre\": \"" + name + "\"}"))).projection(fields(include("unidadesDisponibles"), excludeId())).iterator();
+
+            BasicDBObject query = new BasicDBObject();
+            query.put("nombre", name);
+            
+            Integer available = cursor.next().getInteger("unidadesDisponibles");
+            BasicDBObject newDocument = new BasicDBObject();
+            query.put("nombre", name);
+            newDocument.put("unidadesDisponibles", available - quantity);
+
+            BasicDBObject updateObject = new BasicDBObject();
+            updateObject.put("$set", newDocument);
+
+            collection.updateOne(query, updateObject);
+        }
     }
 
     //CONSULTAS USUARIOS GENERICAS (PARA ENCONTRAR IDIOMAS POR EL NOMBRE)

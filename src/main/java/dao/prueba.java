@@ -18,9 +18,11 @@ public class prueba {
 
     public static void main(String[] args) {
               QueriesDAO q=new QueriesDAO();
-              System.out.print(q.getProductByName("Pantalones").get(0));
-        
+              //System.out.print(q.getProductByName("Pantalones").get(0));
+              UsuariosDao dao = new UsuariosDao();
+              //dao.sameProduct("mata");
 
+              q.updateProductQuantity("guantes", 2);
     }
 
 }
