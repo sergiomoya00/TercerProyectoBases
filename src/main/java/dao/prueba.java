@@ -5,7 +5,6 @@
  */
 package dao;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
@@ -17,15 +16,24 @@ import org.bson.Document;
 public class prueba {
 
     public static void main(String[] args) {
-              QueriesDAO q=new QueriesDAO();
-              //System.out.print(q.getProductByName("Pantalones").get(0));
-              UsuariosDao dao = new UsuariosDao();
-              //dao.sameProduct("mata");
+        QueriesDAO q = new QueriesDAO();
+        //System.out.print(q.getProductByName("Pantalones").get(0));
+        UsuariosDao dao = new UsuariosDao();
+        //dao.sameProduct("mata");
 
-              //q.updateProductQuantity("guantes", 2);
-              List<String> lol = new ArrayList<>();
-              
-              dao.
+        //q.updateProductQuantity("guantes", 2);
+        List lol = new ArrayList<>();
+        lol.add("guantes");
+        lol.add(2);
+        lol.add("Tacos");
+        lol.add(5);
+        lol.add("Gorra verde");
+        lol.add(7);
+
+        //q.createCarrito("jose1", lol);
+        //System.out.print(q.getProductsCarrito("jose1"));
+        //System.out.print(q.updatedProductsList(lol, "guantes"));
+        q.deleteProductCarrito("jose1", "guantes");
     }
 
 }

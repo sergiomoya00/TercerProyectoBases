@@ -133,7 +133,7 @@ public class QueriesDAO {
     }
 
     //CREA UN CARRITO DE COMPRAS
-    public void createCarrito(String nameU, List<String> products, int quatity) {
+    public void createCarrito(String nameU, List<String> products) {
         //Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
         MongoClientURI uri = new MongoClientURI(
                 "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
@@ -148,9 +148,9 @@ public class QueriesDAO {
             Document student = new Document("_id", new ObjectId());
             student.append("nombre", nameU);
 
-            for (int i = 0; i < products.size(); i++) {
+            for (int i = 0; i < products.size(); i = i + 2) {
                 Document[] d = new Document[100];
-                d[i] = new Document("nombre", products.get(i)).append("cantidad", quatity);
+                d[i] = new Document("nombre", products.get(i)).append("cantidad", products.get(i + 1));
                 listd.add(d[i]);
 
             }
@@ -222,6 +222,97 @@ public class QueriesDAO {
 
             collection.deleteOne(searchQuery);
         }
+    }
+
+    //METODO FINAL (ELIMINA UN PRODUCTO ESPECIFICO DEL CARRITO)
+    public void deleteProductCarrito(String username, String nomProductCarrito) {
+
+        List product = new ArrayList();
+        List updatedList = new ArrayList();
+        List firstList = new ArrayList();
+        Document doc = new Document();
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Carrito");
+            MongoCursor<Document> cursor = collection.find(and(Document.parse("{\"nombre\": \"" + username + "\"}"))).projection(fields(include("productos"), excludeId())).iterator();
+
+            firstList = (List) cursor.next().get("productos");
+            product = getProductsCarrito(username);
+            updatedList = updatedProductsList(product, nomProductCarrito);
+
+            /* for (int i = 0; i < updatedList.size(); i = i + 2) {
+                doc.append("nombre", updatedList.get(i)).append("cantidad", updatedList.get(i + 1));
+            }*/
+            BasicDBObject searchQuery = new BasicDBObject();
+            searchQuery.put("nombre", username);
+            searchQuery.put("productos", firstList);
+
+            List<Document> liste = new ArrayList<>();
+            Document newDocument = new Document();
+            newDocument.append("nombre", username);
+
+            for (int i = 0; i < updatedList.size(); i = i + 2) {
+                Document[] d = new Document[100];
+                int conta = 0;
+                d[conta] = new Document("nombre", updatedList.get(i)).append("cantidad", updatedList.get(i + 1));
+                liste.add(d[conta]);
+                //newDocument.append("productos", doc.append("nombre", updatedList.get(i)).append("cantidad", updatedList.get(i + 1)));
+            }
+            newDocument.append("productos", liste);
+
+            collection.replaceOne(searchQuery, newDocument);
+        }
+    }
+
+    public List updatedProductsList(List listaP, String nombreP) {
+
+        for (int i = 0; i + 1 < listaP.size(); i = i++) {
+            if (listaP.get(i).equals(nombreP)) {
+                listaP.remove(i);
+                listaP.remove(i);
+                break;
+            }
+        }
+        return listaP;
+    }
+
+    public List getProductsCarrito(String username) {
+        List atributosS = new ArrayList<>();
+
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Carrito");
+            MongoCursor<Document> cursor = null;
+            cursor = collection.find(and(Document.parse("{\"nombre\": \"" + username + "\"}"))).projection(fields(include("productos"), excludeId())).iterator();
+
+            while (cursor.hasNext()) {
+
+                Document temp_person_doc = cursor.next();
+                java.util.List sports = (java.util.List) temp_person_doc.get("productos");
+
+                while (sports.isEmpty() == false) {
+
+                    int i = 0;
+                    Document nombreIdioma = (Document) sports.get(i);
+                    String nomP = nombreIdioma.getString("nombre");
+                    Integer quantityP = nombreIdioma.getInteger("cantidad");
+                    atributosS.add(nomP);
+                    atributosS.add(quantityP);
+                    sports.remove(sports.get(i));
+//                    sports.remove(sports.get(i + 1));
+                    //                  i = i + 2;
+                }
+
+            }
+
+        }
+        return atributosS;
     }
 
     public List getAllProducts() {
@@ -329,6 +420,35 @@ public class QueriesDAO {
             BasicDBObject newDocument = new BasicDBObject();
             query.put("nombre", name);
             newDocument.put("unidadesDisponibles", available - quantity);
+
+            BasicDBObject updateObject = new BasicDBObject();
+            updateObject.put("$set", newDocument);
+
+            collection.updateOne(query, updateObject);
+        }
+    }
+
+    //Modificar cantidad de producto
+    public void updateProductPrice(String name) {
+
+        MongoClientURI uri = new MongoClientURI(
+                "mongodb+srv://SA:1234@cluster0.izu6r.mongodb.net/test?retryWrites=true&w=majority&connectTimeoutMS=30000&socketTimeoutMS=30000");
+
+        try (MongoClient mongoClient = new MongoClient(uri)) {
+            MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
+            MongoCollection<Document> collection = database.getCollection("Articulo");
+            MongoCollection<Document> collection2 = database.getCollection("Carrito");
+            MongoCursor<Document> cursor = collection.find(and(Document.parse("{\"nombre\": \"" + name + "\"}"))).projection(fields(include("precio"), excludeId())).iterator();
+            MongoCursor<Document> cursor2 = collection2.find(and(Document.parse("{\"nombre\": \"" + name + "\"}"))).projection(fields(include("valor"), excludeId())).iterator();
+
+            BasicDBObject query = new BasicDBObject();
+            query.put("nombre", name);
+
+            Integer price = cursor.next().getInteger("precio");
+            Integer value = cursor2.next().getInteger("valor");
+            BasicDBObject newDocument = new BasicDBObject();
+            query.put("nombre", name);
+            newDocument.put("precio", price + (price * (value / 100)));
 
             BasicDBObject updateObject = new BasicDBObject();
             updateObject.put("$set", newDocument);
