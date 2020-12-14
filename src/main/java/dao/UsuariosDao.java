@@ -90,6 +90,63 @@ public void buyItem(String userName,String itemName )
         }
         return itemList;
     }
+//RECIBE EL NOMBRE DEL ARTICULO Y RETORNA LA CANTIDAD DE VECES QUE FUE VENDIDO    
+    public int itemSold(String itemName)
+    {      
+        int sold = 0;
+        try (Session session = driver.session())
+        {
+            Result result = session.run(
+                    "MATCH (p:Producto {nombre:$x})-[r:COMPRA]-() RETURN count(*) as count",
+                    parameters("x", itemName));
+            while (result.hasNext())
+            {
+                Record record = result.next();
+                sold = record.get(0).asInt();
+                System.out.println(sold);
+            }
+        }
+        return sold;
+    }
+    
+//DEVUELVE TRUE SI CONCUERDA EL USUARIO Y CONTRASENA    
+    public boolean logIn(String userName, String passsword)
+    {      
+        boolean isSuccesfull = false;
+        try (Session session = driver.session())
+        {
+            Result result = session.run(
+                    "MATCH (n:Usuario{usuario: $nombreUsuario,contrasena:$contrasena}) RETURN n",
+                    parameters("nombreUsuario", userName, "contrasena",passsword ));
+            while (result.hasNext())
+            {
+                Record record = result.next();
+                if (record.get(0) != null) {
+                    isSuccesfull = true;
+                }
+            }
+        }
+        return isSuccesfull;
+    }
+//RETORNA FALSO SI NOOO EXISTE EL USUARIO SI DA TRUE ES QUE YA EXISTE
+    public boolean uniqueUsername(String userName)
+    {      
+        boolean isSuccesfull = false;
+        try (Session session = driver.session())
+        {
+            Result result = session.run(
+                    "MATCH (n:Usuario{usuario: $nombreUsuario}) RETURN n",
+                    parameters("nombreUsuario", userName));
+            while (result.hasNext())
+            {
+                Record record = result.next();
+                if (record.get(0) != null) {
+                    isSuccesfull = true;
+                }
+            }
+        }
+        return isSuccesfull;
+    }
     public void close()
     {
         // Closing a driver immediately shuts down all open connections.
