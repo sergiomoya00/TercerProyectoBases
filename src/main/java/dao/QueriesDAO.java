@@ -437,18 +437,20 @@ public class QueriesDAO {
         try (MongoClient mongoClient = new MongoClient(uri)) {
             MongoDatabase database = mongoClient.getDatabase("BdAvanzadas");
             MongoCollection<Document> collection = database.getCollection("Articulo");
-            MongoCollection<Document> collection2 = database.getCollection("Carrito");
+            MongoCollection<Document> collection2 = database.getCollection("Promocion");
             MongoCursor<Document> cursor = collection.find(and(Document.parse("{\"nombre\": \"" + name + "\"}"))).projection(fields(include("precio"), excludeId())).iterator();
-            MongoCursor<Document> cursor2 = collection2.find(and(Document.parse("{\"nombre\": \"" + name + "\"}"))).projection(fields(include("valor"), excludeId())).iterator();
+            MongoCursor<Document> cursor2 = collection2.find(and(Document.parse("{\"producto\": \"" + name + "\"}"))).projection(fields(include("valor"), excludeId())).iterator();
 
             BasicDBObject query = new BasicDBObject();
-            query.put("nombre", name);
-
             Integer price = cursor.next().getInteger("precio");
             Integer value = cursor2.next().getInteger("valor");
-            BasicDBObject newDocument = new BasicDBObject();
+
             query.put("nombre", name);
-            newDocument.put("precio", price + (price * (value / 100)));
+            query.put("precio", price);
+
+            BasicDBObject newDocument = new BasicDBObject();
+            newDocument.put("nombre", name);
+            newDocument.put("precio", (price + (price * (value))));
 
             BasicDBObject updateObject = new BasicDBObject();
             updateObject.put("$set", newDocument);

@@ -33,7 +33,8 @@ public class prueba {
         //q.createCarrito("jose1", lol);
         //System.out.print(q.getProductsCarrito("jose1"));
         //System.out.print(q.updatedProductsList(lol, "guantes"));
-        q.deleteProductCarrito("jose1", "guantes");
+        //q.deleteProductCarrito("jose1", "guantes");
+        q.updateProductPrice("Guantes");
     }
 
 }
